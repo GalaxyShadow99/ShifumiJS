@@ -1,51 +1,75 @@
+const PIERRE = 'PIERRE';
+const PAPIER = 'PAPIER';
+const CISEAUX = 'CISEAUX';
+
 const buttonPierre = document.getElementById('pierre');
 const buttonPapier = document.getElementById('papier');
 const buttonCiseaux = document.getElementById('ciseaux');
 
-const coups = [PIERRE,PAPIER,CISEAUX];
+const paraVictoire = document.getElementById('nbVictoire');
+const paraDefaite = document.getElementById('nbDefaite');
+const paraEgalite = document.getElementById('nbEgalite');
 
-buttonPapier.addEventListener("click",played(coups.PAPIER));
-buttonPierre.addEventListener("click",played(coups.PIERRE));
-buttonCiseaux.addEventListener("click",played(coups.CISEAUX));
+const coups = [PIERRE, PAPIER, CISEAUX];
+
+buttonPapier.addEventListener("click", () => played(PAPIER));
+buttonPierre.addEventListener("click", () => played(PIERRE));
+buttonCiseaux.addEventListener("click", () => played(CISEAUX));
 
 let victoire = 0;
-let defaire = 0;
+let defaite = 0;
 let egalite = 0;
 
+function updateScores(){
+    paraDefaite.innerText = defaite;
+    paraVictoire.innerText = victoire;
+    paraEgalite.innerText = egalite;
+    
+}
+
+function clearCompteur(){
+    victoire = 0;
+    defaite = 0;
+    egalite = 0;
+    updateScores()
+}
+
 function played(coup){
-    var index = Math.floor(Math.random() * coups.length);
-    let aiChoice = coups[index];
+    const index = Math.floor(Math.random() * coups.length);
+    const aiChoice = coups[index];
     console.log(`Coup du bot : ${aiChoice}`);
     
-    // switch sur le coup du joueur
-        let resultat;
+    let resultat = "Coup invalide";
+
     switch(coup){
-        case coups.PIERRE:
+        case PIERRE:
             switch(aiChoice){
-                case coups.PIERRE: egalite++; break;
-                case coups.PAPIER: defaite++; break;
-                case coups.CISEAUX: victoire++; break;
+                case PIERRE: egalite++; resultat = "Égalité"; break;
+                case PAPIER: defaite++; resultat = "Perdu"; break;
+                case CISEAUX: victoire++; resultat = "Gagné"; break;
             }
             break;
-        case coups.PAPIER:
+        case PAPIER:
             switch(aiChoice){
-                case coups.PIERRE: resultat = "Gagné"; break;
-                case coups.PAPIER: resultat = "Égalité"; break;
-                case coups.CISEAUX: resultat = "Perdu"; break;
+                case PIERRE: victoire++; resultat = "Gagné"; break;
+                case PAPIER: egalite++; resultat = "Égalité"; break;
+                case CISEAUX: defaite++; resultat = "Perdu"; break;
             }
             break;
-        case coups.CISEAUX:
+        case CISEAUX:
             switch(aiChoice){
-                case coups.PIERRE: resultat = "Perdu"; break;
-                case coups.PAPIER: resultat = "Gagné"; break;
-                case coups.CISEAUX: resultat = "Égalité"; break;
+                case PIERRE: defaite++; resultat = "Perdu"; break;
+                case PAPIER: victoire++; resultat = "Gagné"; break;
+                case CISEAUX: egalite++; resultat = "Égalité"; break;
             }
             break;
         default:
-            resultat = "Coup invalide";
+            // reste "Coup invalide"
     }
 
     console.log(`Vous avez ${resultat}`);
-    return resultat;
+    console.log(`Score -> Gagné: ${victoire}, Perdu: ${defaite}, Égalité: ${egalite}`);
+    updateScores()
 
+    return resultat;
 }
